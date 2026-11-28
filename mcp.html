@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab 2 page — Manage the agent</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230A6672'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-size='20' font-weight='700' text-anchor='middle' fill='white'%3E4%3C/text%3E%3C/svg%3E">
+<style>
+  /* This page is teal on purpose. The All labs page (index.html) is navy.
+     The two must not look alike: people have both open and need to tell at a glance which one they are on. */
+  :root { --navy:#07505A; --blue:#0A6672; --home:#002060; --orange:#ED7D31; --purple:#7030A0; --pale:#D9EEF0; --line:#D9D9D9; --ink:#222; --grey:#5b6470; --green:#2E7D32; --red:#C00000; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: -apple-system, "Segoe UI", Calibri, Roboto, Arial, sans-serif; color:var(--ink); background:#E9F4F5; font-size:17px; line-height:1.45; }
+  header { background:var(--blue); color:#fff; padding:18px 16px 14px; }
+  header h1 { margin:0 0 4px; font-size:22px; }
+  header p { margin:0; opacity:.9; font-size:15px; }
+  header .where { display:inline-block; background:#fff; color:var(--navy); font-weight:700; font-size:13px; letter-spacing:.05em; text-transform:uppercase; border-radius:20px; padding:3px 11px; margin:0 0 8px; }
+  nav { background:#fff; border-bottom:1px solid var(--line); padding:8px 12px; font-size:15px; display:flex; gap:14px; flex-wrap:wrap; }
+  nav a { color:var(--blue); text-decoration:none; padding:4px 0; }
+  nav a.here { font-weight:700; border-bottom:3px solid var(--orange); }
+  nav a::before { content:""; display:inline-block; width:10px; height:10px; border-radius:3px; background:var(--blue); margin-right:6px; }
+  nav a.all { color:var(--home); } nav a.all::before { background:var(--home); border-radius:50%; }
+  .youare { background:#fff; border:2px solid var(--blue); border-radius:12px; padding:11px 13px; margin:12px 0; font-size:15.5px; }
+  .youare b { color:var(--navy); } .youare a { color:var(--home); font-weight:600; }
+  main { max-width:760px; margin:0 auto; padding:2px 12px 60px; }
+  section.step { background:#fff; border:1px solid var(--line); border-left:6px solid var(--blue); border-radius:12px; padding:14px; margin:12px 0; }
+  section.step.locked { opacity:.45; }
+  .num { display:inline-flex; width:32px; height:32px; border-radius:8px; background:var(--blue); color:#fff; font-weight:700; align-items:center; justify-content:center; margin-right:8px; flex:none; }
+  h2 { font-size:19px; margin:0 0 6px; color:var(--blue); display:flex; align-items:center; }
+  p.what { margin:4px 0 10px; color:var(--grey); font-size:15.5px; }
+  button { font:inherit; font-weight:600; border:0; border-radius:10px; padding:11px 16px; background:var(--blue); color:#fff; cursor:pointer; margin:0 6px 8px 0; }
+  button:disabled { background:#aab3c0; cursor:default; }
+  button.danger { background:var(--red); }
+  .out { margin-top:6px; }
+  .fact { background:var(--pale); border-radius:8px; padding:8px 10px; font-weight:600; color:var(--blue); margin-top:8px; }
+  .q { background:#f7f8fa; border:1px solid var(--line); border-radius:8px; padding:9px 11px; font-style:italic; }
+  .tool { border:1px solid var(--line); border-radius:10px; padding:9px 11px; margin-top:8px; }
+  .tool b { color:var(--blue); }
+  .tag { display:inline-block; font-size:12.5px; font-weight:700; border-radius:20px; padding:2px 9px; margin-left:6px; vertical-align:1px; }
+  .tag.read { background:#E3F1E4; color:var(--green); } .tag.write { background:#FFF0D6; color:#8a5a00; }
+  .tool .name { font-family: ui-monospace, Menlo, Consolas, monospace; font-size:12.5px; color:var(--grey); }
+  .result { border-radius:10px; padding:10px; margin-top:8px; border:1px solid var(--line); background:#f7f8fa; font-size:15px; white-space:pre-wrap; overflow-wrap:anywhere; }
+  .result .asked { font-weight:700; color:var(--blue); white-space:normal; }
+  .refused { border-color:var(--red); background:#F9E3E3; }
+  .refused .asked { color:var(--red); }
+  .note { background:#EFE6F6; color:var(--purple); border-radius:8px; padding:9px 11px; margin-top:10px; font-weight:600; font-size:15.5px; }
+  .warn { background:#F9E3E3; color:var(--red); }
+  details { margin-top:10px; }
+  summary { cursor:pointer; color:var(--blue); font-size:15px; }
+  .log { background:#10203a; color:#d7e3f4; border-radius:8px; padding:8px 10px; margin-top:6px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size:12px; white-space:pre-wrap; overflow-wrap:anywhere; max-height:340px; overflow:auto; }
+  .log .dir { color:#ffb37a; font-weight:700; }
+  textarea { width:100%; min-height:230px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size:13px; border:1.5px solid #9aa5b4; border-radius:10px; padding:10px; }
+  .box { background:#f7f8fa; border:1px solid var(--line); border-radius:8px; padding:8px 10px; margin-top:6px; font-size:14.5px; }
+  footer { text-align:center; color:var(--grey); font-size:13px; margin-top:24px; }
+  .err { background:#F9E3E3; color:var(--red); padding:10px; border-radius:8px; margin-top:8px; font-size:15px; }
+</style>
+</head>
+<body data-page="mcp">
+<header>
+  <div class="where">Lab 2 page · run the lab here</div>
+  <h1>Manage the agent</h1>
+  <p>AI Demystified for Tech Leaders · Kettlewick is a made-up shop</p>
+</header>
+<nav><a class="all" href="./">All labs</a><a href="rag.html">Lab 1: RAG</a><a class="here" href="mcp.html">Lab 2: Manage the agent</a><a href="injection.html">Lab 3: Prompt injection</a></nav>
+<main>
+  <div class="youare"><b>This is the Lab 2 page: you press the buttons here.</b> The steps to follow and the boxes for your answers are under Lab 2 on the navy <b>All labs</b> page, in your other tab. <a href="./#lab2" target="_blank" rel="noopener">Not open? Open the Lab 2 steps.</a></div>
+  <section class="step" id="s1">
+    <h2><span class="num">A</span>Before: no connection</h2>
+    <p class="what">An assistant is asked about one of Kettlewick's orders:</p>
+    <div class="q">“Was order 1182 charged twice? What should we do about it?”</div>
+    <p class="what" style="margin-top:10px">It has never seen Kettlewick's order list. With no connection it can only say it cannot see the order — or guess.</p>
+  </section>
+
+  <section class="step" id="s2">
+    <h2><span class="num">B</span>Connect to the Kettlewick server</h2>
+    <p class="what">Kettlewick offers its support data through an MCP server. When an assistant connects, the first thing it does is ask the server: what can I use here?</p>
+    <button id="b2">Connect</button>
+    <div class="out" id="o2"></div>
+  </section>
+
+  <section class="step locked" id="s3">
+    <h2><span class="num">C</span>Use what the server offers</h2>
+    <p class="what">In a real assistant, the model chooses which of these to use and when. Here you press the buttons it would press. Press all three.</p>
+    <button id="b3a" disabled>Look up order 1182</button>
+    <button id="b3b" disabled>List the charges on order 1182</button>
+    <button id="b3c" disabled>Read the refund policy</button>
+    <div class="out" id="o3"></div>
+  </section>
+
+  <section class="step locked" id="s4">
+    <h2><span class="num">D</span>Ask for something that is not on the list</h2>
+    <p class="what">The customer wants a refund. Tell the server to issue one.</p>
+    <button id="b4" class="danger" disabled>Issue a refund for order 1182</button>
+    <div class="out" id="o4"></div>
+  </section>
+
+  <section class="step locked" id="s5">
+    <h2><span class="num">E</span>After: hand it to a model</h2>
+    <p class="what">This is what the assistant now has to work with: the same question, plus what came back through the connection. Copy it into any chatbot, or open the expected answer.</p>
+    <div class="out" id="o5"></div>
+  </section>
+
+  <details id="logWrap" hidden>
+    <summary>See the messages that crossed the plug (<span id="logCount">0</span>)</summary>
+    <div class="log" id="log"></div>
+    <p class="what">Every MCP connection is messages like these, in the same format whichever assistant and whichever system are on the two ends. That shared format is the whole idea.</p>
+  </details>
+
+  <footer>The server in this lab runs inside this page, on your own device, so there is nothing to sign in to. It speaks the real protocol.<br>© 2026 Brent C. Laster &amp; Tech Skills Transformations LLC</footer>
+</main>
+<script type="module" src="mcp-app.js"></script>
+</body>
+</html>

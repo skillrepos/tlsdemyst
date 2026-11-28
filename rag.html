@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab 1 page — Real RAG in your browser</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230A6672'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-size='20' font-weight='700' text-anchor='middle' fill='white'%3E2%3C/text%3E%3C/svg%3E">
+<style>
+  /* This page is teal on purpose. The All labs page (index.html) is navy.
+     The two must not look alike: people have both open and need to tell at a glance which one they are on. */
+  :root { --navy:#07505A; --blue:#0A6672; --home:#002060; --orange:#ED7D31; --purple:#7030A0; --pale:#D9EEF0; --line:#D9D9D9; --ink:#222; --grey:#5b6470; --green:#2E7D32; --red:#C00000; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: -apple-system, "Segoe UI", Calibri, Roboto, Arial, sans-serif; color:var(--ink); background:#E9F4F5; font-size:17px; line-height:1.45; }
+  header { background:var(--blue); color:#fff; padding:18px 16px 14px; }
+  header h1 { margin:0 0 4px; font-size:22px; }
+  header p { margin:0; opacity:.9; font-size:15px; }
+  header .where { display:inline-block; background:#fff; color:var(--navy); font-weight:700; font-size:13px; letter-spacing:.05em; text-transform:uppercase; border-radius:20px; padding:3px 11px; margin:0 0 8px; }
+  nav { background:#fff; border-bottom:1px solid var(--line); padding:8px 12px; font-size:15px; display:flex; gap:14px; flex-wrap:wrap; }
+  nav a { color:var(--blue); text-decoration:none; padding:4px 0; }
+  nav a.here { font-weight:700; border-bottom:3px solid var(--orange); }
+  nav a::before { content:""; display:inline-block; width:10px; height:10px; border-radius:3px; background:var(--blue); margin-right:6px; }
+  nav a.all { color:var(--home); } nav a.all::before { background:var(--home); border-radius:50%; }
+  .youare { background:#fff; border:2px solid var(--blue); border-radius:12px; padding:11px 13px; margin:12px 0; font-size:15.5px; }
+  .youare b { color:var(--navy); } .youare a { color:var(--home); font-weight:600; }
+  main { max-width:760px; margin:0 auto; padding:2px 12px 60px; }
+  .ready { margin:12px 0; padding:10px 12px; border-radius:10px; background:#fff; border:1px solid var(--line); font-size:15px; }
+  .ready b { color:var(--blue); }
+  .bar { height:8px; background:#e6eaf0; border-radius:4px; overflow:hidden; margin-top:6px; }
+  .bar i { display:block; height:100%; width:0; background:var(--orange); transition:width .2s; }
+  section.step { background:#fff; border:1px solid var(--line); border-left:6px solid var(--blue); border-radius:12px; padding:14px; margin:12px 0; }
+  section.step.locked { opacity:.45; }
+  .num { display:inline-flex; width:32px; height:32px; border-radius:8px; background:var(--blue); color:#fff; font-weight:700; align-items:center; justify-content:center; margin-right:8px; }
+  h2 { font-size:19px; margin:0 0 6px; color:var(--blue); display:flex; align-items:center; }
+  p.what { margin:4px 0 10px; color:var(--grey); font-size:15.5px; }
+  button { font:inherit; font-weight:600; border:0; border-radius:10px; padding:11px 16px; background:var(--blue); color:#fff; cursor:pointer; }
+  button:disabled { background:#aab3c0; cursor:default; }
+  button.ghost { background:#fff; color:var(--blue); border:1.5px solid var(--blue); padding:8px 12px; font-weight:500; font-size:15px; }
+  .out { margin-top:10px; }
+  .fact { background:var(--pale); border-radius:8px; padding:8px 10px; font-weight:600; color:var(--blue); }
+  details { margin-top:8px; }
+  summary { cursor:pointer; color:var(--blue); font-size:15px; }
+  .box { background:#f7f8fa; border:1px solid var(--line); border-radius:8px; padding:8px 10px; margin-top:6px; font-size:14.5px; white-space:pre-wrap; overflow-wrap:anywhere; }
+  .mono { font-family: ui-monospace, Menlo, Consolas, monospace; font-size:13px; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; margin:8px 0; }
+  input[type=text] { width:100%; font:inherit; padding:11px 12px; border:1.5px solid #9aa5b4; border-radius:10px; margin-bottom:8px; }
+  .hit { border:1px solid var(--line); border-radius:10px; padding:10px; margin-top:8px; }
+  .hit .head { display:flex; justify-content:space-between; gap:8px; font-weight:700; color:var(--blue); font-size:15.5px; }
+  .hit .score { white-space:nowrap; }
+  .meter { height:8px; background:#e6eaf0; border-radius:4px; margin:6px 0; overflow:hidden; }
+  .meter i { display:block; height:100%; }
+  .strong { color:var(--green); } .fair { color:#9a6700; } .weak { color:var(--red); }
+  .note { border-left:0; background:#EFE6F6; color:var(--purple); border-radius:8px; padding:9px 11px; margin-top:10px; font-weight:600; font-size:15.5px; }
+  .warn { background:#F9E3E3; color:var(--red); }
+  textarea { width:100%; min-height:210px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size:13px; border:1.5px solid #9aa5b4; border-radius:10px; padding:10px; }
+  footer { text-align:center; color:var(--grey); font-size:13px; margin-top:24px; }
+  .hit.planted { border:2px solid var(--red); background:#FDF3F3; }
+  .tag { display:inline-block; background:var(--red); color:#fff; font-size:12px; font-weight:700; border-radius:10px; padding:1px 8px; margin-left:4px; vertical-align:1px; }
+  .lab5 { display:inline-block; background:var(--orange); color:#fff; font-size:13px; font-weight:700; border-radius:20px; padding:2px 10px; margin-left:8px; }
+  .post { background:#FFF8E6; border:1px solid #E8C770; border-radius:8px; padding:10px 12px; margin:8px 0 12px; font-size:15px; }
+  .post .who { font-size:13px; color:var(--grey); margin-bottom:4px; }
+  .stop { background:var(--red); color:#fff; border-radius:12px; padding:16px 18px; margin:22px 0; text-align:center; }
+  .stop .big { font-size:24px; font-weight:800; letter-spacing:.02em; }
+  .stop p { margin:6px 0 0; font-size:16px; }
+  .stop a { color:#fff; font-weight:700; }
+  section.step.only5 { border:3px solid var(--orange); border-left:10px solid var(--orange); background:#FFFBF4; padding-top:0; overflow:hidden; }
+  .only5 .strip { background:var(--orange); color:#fff; font-weight:800; font-size:15px; letter-spacing:.06em; text-transform:uppercase; margin:0 -14px 12px; padding:8px 14px; }
+  .only5 .num { background:var(--orange); }
+  .endlab { background:#fff; border:2px solid var(--blue); border-radius:12px; padding:12px 14px; margin:18px 0; text-align:center; font-size:16px; }
+  .endlab a { color:var(--home); font-weight:600; }
+  .err { background:#F9E3E3; color:var(--red); padding:10px; border-radius:8px; margin-top:8px; font-size:15px; }
+</style>
+</head>
+<body data-page="rag">
+<header>
+  <div class="where">Lab 1 page · run the lab here</div>
+  <h1>Real RAG, in your browser</h1>
+  <p>AI Demystified for Tech Leaders · Kettlewick is a made-up shop</p>
+</header>
+<nav><a class="all" href="./">All labs</a><a class="here" href="rag.html">Lab 1: RAG</a><a href="mcp.html">Lab 2: Manage the agent</a><a href="injection.html">Lab 3: Prompt injection</a></nav>
+<main>
+  <div class="youare"><b>This is the Lab 1 page: you press the buttons here.</b> The steps to follow and the boxes for your answers are under Lab 1 on the navy <b>All labs</b> page, in your other tab. <a href="./#lab1" target="_blank" rel="noopener">Not open? Open the Lab 1 steps.</a></div>
+  <div class="ready" id="ready">
+    <span id="readyText">Getting the lab ready… a one-time download of about 40&nbsp;MB. You can read on while it loads.</span>
+    <div class="bar"><i id="readyBar"></i></div>
+  </div>
+
+  <section class="step" id="s1">
+    <h2><span class="num">A</span>The page reads the PDF</h2>
+    <p class="what">The document is a 4-page customer care handbook. A PDF is made for printing, so the first job is to pull the plain text out of it. The page does that for you — you do not need to read the handbook yourself.</p>
+    <button id="b1">Read it for me</button> <a href="kettlewick-handbook.pdf" target="_blank" rel="noopener" style="margin-left:10px;font-size:15px">See the PDF</a>
+    <div class="out" id="o1"></div>
+  </section>
+
+  <section class="step locked" id="s2">
+    <h2><span class="num">B</span>The page splits the text into passages</h2>
+    <p class="what">A whole document is too much to search or to hand to a model at once. So it is cut into short passages — here, one per section.</p>
+    <button id="b2" disabled>Split into passages</button>
+    <div class="out" id="o2"></div>
+  </section>
+
+  <section class="step locked" id="s3">
+    <h2><span class="num">C</span>The page turns each passage into numbers, and stores them</h2>
+    <p class="what">A small model turns each passage into a list of 384 numbers that stands for its meaning. Passages about similar things get similar numbers. The lists go into a vector database, which is built to find the closest ones fast.</p>
+    <button id="b3" disabled>Turn into numbers and store</button>
+    <div class="out" id="o3"></div>
+  </section>
+
+  <section class="step locked" id="s4">
+    <h2><span class="num">D</span>You ask a question</h2>
+    <p class="what">Your question is turned into numbers the same way. The database returns the three passages whose numbers are closest to it.</p>
+    <input type="text" id="q" value="I bought a blender 45 days ago. Can I get my money back?" aria-label="Your question">
+    <div class="chips">
+      <button class="ghost" data-q="I bought a blender 45 days ago. Can I get my money back?">Blender, 45 days</button>
+      <button class="ghost" data-q="My parcel turned up smashed. What now?">Parcel turned up smashed</button>
+      <button class="ghost" data-q="Do you sell gift cards?">Gift cards</button>
+    </div>
+    <button id="b4" disabled>Find the closest passages</button>
+    <div class="out" id="o4"></div>
+  </section>
+
+  <section class="step locked" id="s5">
+    <h2><span class="num">E</span>The page builds the message for a model</h2>
+    <p class="what">This is the last step of RAG: the passages and your question are put into one message for a model to answer from. Copy it into any chatbot, or open the expected answer below.</p>
+    <div class="out" id="o5"></div>
+  </section>
+
+  <div class="endlab" id="end2"><b>That is the end of Lab 1.</b> Go back to the navy <a href="./#lab1" target="_blank" rel="noopener">All labs</a> tab and type your answers.</div>
+
+  <footer>Everything on this page runs on your own device. Nothing you type is sent anywhere.<br>© 2026 Brent C. Laster &amp; Tech Skills Transformations LLC</footer>
+</main>
+<script type="module" src="app.js"></script>
+</body>
+</html>

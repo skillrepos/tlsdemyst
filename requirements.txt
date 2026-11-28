@@ -1,0 +1,4 @@
+# Used only by the optional Codespace versions of the labs.
+chromadb      # the vector database (Lab 2)
+pypdf         # reads text out of PDF files (Lab 2)
+mcp>=2,<3     # connects assistants to systems (Lab 4)

@@ -1,0 +1,8 @@
+order_id,customer,item,price_usd,order_date,delivered_date,final_sale
+1175,Priya Raman,Stand mixer,249.00,2026-09-02,2026-09-08,no
+1179,Marcus Oyelaran,Toaster,39.00,2026-09-28,2026-10-03,no
+1182,Dana Whitfield,Blender,89.00,2026-10-14,2026-10-19,no
+1186,Tomas Lindqvist,Kettle,45.00,2026-10-30,2026-11-04,no
+1190,Aiko Tanaka,Coffee grinder,59.00,2026-11-06,2026-11-11,yes
+2207,Sam Okafor,Blender,89.00,2026-11-20,2026-11-25,no
+2211,Renee Castillo,Air fryer,129.00,2026-11-24,2026-11-28,no

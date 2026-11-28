@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>All labs — AI Demystified for Tech Leaders</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23002060'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-size='20' font-weight='700' text-anchor='middle' fill='white'%3E≡%3C/text%3E%3C/svg%3E">
+<style>
+  :root { --navy:#002060; --blue:#003366; --orange:#ED7D31; --purple:#7030A0; --pale:#DCE9F7; --line:#D9D9D9; --ink:#222; --grey:#5b6470; --green:#2E7D32; --red:#C00000; --field:#9aa5b4; --run:#0A6672; }
+  * { box-sizing: border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; font-family: -apple-system, "Segoe UI", Calibri, Roboto, Arial, sans-serif; color:var(--ink); background:#f5f7fa; font-size:17px; line-height:1.5; }
+  header.top { background:var(--navy); color:#fff; padding:18px 16px 14px; }
+  header.top h1 { margin:0 0 4px; font-size:22px; }
+  header.top p { margin:0; opacity:.9; font-size:15px; }
+  header.top .where { display:inline-block; background:#fff; color:var(--navy); font-weight:700; font-size:13px; letter-spacing:.05em; text-transform:uppercase; border-radius:20px; padding:3px 11px; margin:0 0 8px; }
+  nav.pages { background:#fff; border-bottom:1px solid var(--line); padding:8px 12px; font-size:15px; display:flex; gap:14px; flex-wrap:wrap; }
+  nav.pages a { color:var(--blue); text-decoration:none; padding:4px 0; }
+  nav.pages a.here { font-weight:700; border-bottom:3px solid var(--orange); }
+  /* The Lab 1, Lab 2 and Lab 3 pages (rag.html, mcp.html, injection.html) are teal; this page is navy. Keep them different. */
+  nav.pages a::before { content:""; display:inline-block; width:10px; height:10px; border-radius:50%; background:var(--navy); margin-right:6px; }
+  nav.pages a.run { color:var(--run); } nav.pages a.run::before { background:var(--run); border-radius:3px; }
+  a.btn.run { background:var(--run); } .runword { color:var(--run); }
+  main { max-width:780px; margin:0 auto; padding:4px 12px 80px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px; margin:16px 0; }
+  .rule { background:#FFF6D6; border:1px solid #E0B400; color:#5a4500; border-radius:10px; padding:10px 12px; font-weight:600; margin:12px 0 0; }
+  h2.session { font-size:15px; letter-spacing:.06em; text-transform:uppercase; color:var(--grey); margin:34px 4px 0; border-bottom:2px solid var(--orange); padding-bottom:6px; }
+  .start h2 { margin:0 0 8px; color:var(--blue); font-size:20px; }
+  .start ol { margin:8px 0 0; padding-left:22px; } .start li { margin:6px 0; }
+  .toc { display:grid; grid-template-columns:1fr 1fr; gap:6px 18px; margin-top:12px; font-size:15.5px; }
+  .toc div b { display:block; color:var(--grey); font-size:13px; letter-spacing:.05em; text-transform:uppercase; margin-bottom:2px; }
+  .toc a { display:block; color:var(--blue); text-decoration:none; padding:5px 0; }
+  .toc a span { color:var(--grey); font-size:13.5px; }
+  .tools { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+  a.btn, button { font:inherit; font-weight:600; border:0; border-radius:10px; padding:10px 15px; background:var(--blue); color:#fff; cursor:pointer; text-decoration:none; display:inline-block; }
+  button:disabled { background:#aab3c0; cursor:default; }
+  a.ghost, button.ghost { background:#fff; color:var(--blue); border:1.5px solid var(--blue); font-weight:600; font-size:15px; padding:8px 12px; }
+  button.quiet { background:none; color:var(--grey); border:0; text-decoration:underline; font-weight:400; font-size:14.5px; padding:8px 4px; }
+
+  section.lab { scroll-margin-top:8px; border-top:6px solid var(--orange); }
+  .labhead { display:flex; align-items:center; gap:14px; margin:2px 0 8px; }
+  /* Lab badge: big and darker orange so white text stays readable (BC, 11/24) */
+  .badge { background:#C55A11; color:#fff; font-weight:800; border-radius:10px; padding:8px 16px; font-size:22px; letter-spacing:.05em; line-height:1.1; white-space:nowrap; box-shadow:0 2px 6px rgba(197,90,17,.35); }
+  .labhead h3 { margin:0; font-size:23px; color:var(--navy); line-height:1.2; }
+  .meta { color:var(--grey); font-size:14.5px; margin:2px 0 10px; }
+  .why { background:var(--pale); border-radius:10px; padding:10px 12px; margin:0 0 14px; color:#12305a; }
+  .why b { color:var(--navy); }
+  ol.steps { list-style:none; margin:0; padding:0; counter-reset:step; }
+  ol.steps > li { counter-increment:step; position:relative; padding:0 0 6px 44px; margin:18px 0 0; }
+  ol.steps > li::before { content:counter(step); position:absolute; left:0; top:-2px; width:30px; height:30px; border-radius:50%; background:var(--navy); color:#fff; font-weight:700; font-size:15px; display:flex; align-items:center; justify-content:center; }
+  ol.steps > li > p:first-child { margin-top:0; }
+  ol.steps p { margin:6px 0; }
+  .hint { color:var(--grey); font-size:15px; }
+  .sample { background:#f7f8fa; border:1px solid var(--line); border-left:4px solid var(--navy); border-radius:8px; padding:10px 12px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size:14px; white-space:pre-wrap; overflow-wrap:anywhere; margin:8px 0; }
+  .quote { background:#f7f8fa; border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin:0 0 6px; }
+  .quote ul { margin:6px 0 0; padding-left:20px; } .quote li { margin:3px 0; }
+  label.f { display:block; font-weight:600; font-size:15px; margin:10px 0 3px; }
+  input[type=text], input[type=number], textarea, select { font:inherit; font-size:16px; width:100%; padding:9px 10px; border:1.5px solid var(--field); border-radius:8px; background:#fff; color:var(--ink); }
+  textarea { min-height:46px; resize:vertical; line-height:1.4; overflow:hidden; }
+  input.short { width:110px; }
+  input:focus, textarea:focus, select:focus { outline:2px solid var(--orange); outline-offset:1px; border-color:var(--orange); }
+  .row { display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; }
+  .row > div { flex:1 1 150px; }
+  [data-line] .row { gap:10px; flex-wrap:nowrap; } [data-line] .row > div { flex:0 1 auto; } [data-line] input.short { width:86px; } [data-line] .countbtn { padding:10px 12px; white-space:nowrap; }
+  [data-line] label.f { white-space:nowrap; }
+  .item { border:1px solid var(--line); border-radius:10px; padding:10px 12px; margin:10px 0; }
+  .item .t { font-weight:600; }
+  .seg { display:inline-flex; flex-wrap:wrap; gap:6px; margin:6px 0; }
+  .seg label { cursor:pointer; }
+  .seg input { position:absolute; opacity:0; pointer-events:none; }
+  .seg span { display:inline-block; border:1.5px solid var(--field); border-radius:8px; padding:7px 13px; font-weight:600; font-size:15px; background:#fff; min-width:44px; text-align:center; }
+  .seg input:checked + span { background:var(--navy); border-color:var(--navy); color:#fff; }
+  .seg input:focus-visible + span { outline:2px solid var(--orange); outline-offset:1px; }
+  .checks label { display:flex; gap:9px; align-items:flex-start; margin:7px 0; font-size:16px; cursor:pointer; }
+  .checks input { width:20px; height:20px; margin-top:3px; flex:none; accent-color:var(--navy); }
+  table { border-collapse:collapse; width:100%; font-size:15px; margin:8px 0; }
+  th { background:var(--navy); color:#fff; text-align:left; padding:7px 8px; font-size:13.5px; vertical-align:bottom; }
+  td { border:1px solid var(--line); padding:7px 8px; vertical-align:top; }
+  tr.total td { font-weight:700; background:#f7f8fa; }
+  td input[type=text] { padding:6px 7px; min-width:74px; }
+  .scroll { overflow-x:auto; }
+  .tok { display:flex; flex-wrap:wrap; gap:3px; margin:8px 0 2px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size:14px; }
+  .tok span { padding:2px 3px; border-radius:4px; white-space:pre; }
+  .tok span:nth-child(4n+1) { background:#DCE9F7; } .tok span:nth-child(4n+2) { background:#FBE3D0; } .tok span:nth-child(4n+3) { background:#E4F1E0; } .tok span:nth-child(4n) { background:#EADDF3; }
+  .ok { color:var(--green); font-weight:700; } .no { color:var(--red); font-weight:700; }
+  .note { background:#EFE6F6; color:var(--purple); border-radius:8px; padding:9px 11px; margin-top:10px; font-weight:600; font-size:15.5px; }
+  .note.warn { background:#F9E3E3; color:var(--red); }
+  details.take { margin-top:18px; border-top:1px dashed var(--line); padding-top:10px; }
+  details.take summary { cursor:pointer; color:var(--purple); font-weight:700; }
+  details.take div { background:#EFE6F6; color:#3d1a5c; border-radius:8px; padding:10px 12px; margin-top:8px; }
+  .later { color:var(--grey); font-size:15px; margin-top:14px; }
+  .saved { color:var(--green); font-size:14px; min-height:20px; margin-top:6px; }
+  footer { text-align:center; color:var(--grey); font-size:13px; margin-top:28px; }
+  #copyBox { display:none; margin-top:10px; min-height:180px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size:13px; }
+  @media (max-width:520px) { .toc { grid-template-columns:1fr; } .labhead h3 { font-size:20px; } .badge { font-size:19px; padding:7px 13px; } ol.steps > li { padding-left:40px; } }
+  @media print {
+    body { background:#fff; font-size:11.5pt; }
+    nav.pages, .tools, .noprint, button, details.take:not([open]) { display:none !important; }
+    main { max-width:none; padding:0; }
+    .card { border:0; padding:0; margin:0 0 14pt; }
+    section.lab { break-before:page; } section.lab.first { break-before:auto; }
+    header.top { background:none; color:#000; padding:0 0 8pt; } header.top h1 { color:var(--navy); }
+    ol.steps > li, .item, table { break-inside:avoid; }
+    input, textarea, select { border:1px solid #888 !important; }
+    .scroll { overflow:visible; }
+  }
+  .badge.more { background:var(--grey); font-size:14px; padding:8px 12px; box-shadow:none; }
+  p.moreintro { margin:10px 4px 0; color:var(--grey); }
+  @media print { p.moreintro { margin:0 0 8pt; } }
+  /* on a phone the two boxes and the Count button did not fit on one line and pushed the page 77px too wide (found 11/27 at 375px) */
+  @media (max-width:520px) { [data-line] .row { flex-wrap:wrap; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="where">All labs · steps and answer boxes</div>
+  <h1>AI Demystified for Tech Leaders — Labs</h1>
+  <p>Tech Leader Summit · four short labs, and three more to try on your own · Kettlewick is a made-up shop</p>
+</header>
+<nav class="pages"><a class="here" href="./">All labs</a><a class="run" href="rag.html">Lab 1: RAG</a><a class="run" href="mcp.html">Lab 2: Manage the agent</a><a class="run" href="injection.html">Lab 3: Prompt injection</a></nav>
+<main>
+
+<div class="card start">
+  <h2>Start here</h2>
+  <p>This page holds the four labs we do together, one at a time during the two sessions. Each lab’s slide shows its number. You do every lab on your own, and there is nothing to install. At the bottom of the page there are <a href="#more">three more labs to try on your own</a> afterwards.</p>
+  <p><b>Where you work:</b> you type your answers right here on this page. <b>Labs 1, 2 and 3</b> also have their own page, where you press the buttons to run the lab (links at the top, and in those labs). You still type your answers for those labs here.</p>
+  <ol>
+    <li><b>Type your answers into the boxes.</b> They are saved on this device as you type. Nothing you type is sent anywhere, and there is no sign-in.</li>
+    <li><b>Do this now:</b> <a href="rag.html" target="_blank" rel="noopener">open the Lab 1 page</a> in a new tab and leave it open. It needs a minute to load the first time (a one-time download of about 40 MB). Then come back to this tab.</li>
+    <li><b>Keep your answers:</b> at the end, save this page as a PDF or copy your answers into an email to yourself. The buttons are below and at the bottom of the page.</li>
+  </ol>
+  <div class="rule">One rule: never paste company data into a chatbot. Every lab here that uses a chatbot uses only the sample text on this page. “Start your own pilot page”, at the bottom, is about your own work, but it uses no chatbot, and your answers stay on your device.</div>
+  <div class="toc">
+    <div><b>Session 1: the technology</b>
+      <a href="#lab1">1. Real RAG, in your browser</a>
+      <a href="#lab2">2. Manage the agent</a>
+    </div>
+    <div><b>Session 2: leading it</b>
+      <a href="#lab3">3. See the top AI security risk</a>
+      <a href="#lab4">4. Score the proposal</a>
+    </div>
+    <div><b>More to try on your own</b>
+      <a href="#tokens">Estimate the tokens</a>
+      <a href="#rules">Teach it your rules</a>
+      <a href="#pilot">Start your own pilot page</a>
+    </div>
+  </div>
+  <div class="tools">
+    <button class="ghost" data-act="print">Save as PDF or print</button>
+    <button class="ghost" data-act="copy">Copy my answers</button>
+    <a class="btn ghost" href="lab-workbook.pdf" download>Download the fill-in PDF</a>
+    <a class="btn ghost" href="handout.pdf" target="_blank" rel="noopener">Open the takeaway handout</a>
+  </div>
+  <p class="hint noprint" style="margin-bottom:0">Prefer paper or a file? The fill-in PDF has the same labs. The takeaway handout has the four questions, the seven-line pilot checklist, the eight questions to ask and a plain-language glossary: keep it.</p>
+</div>
+
+<h2 class="session">Session 1: the technology</h2>
+
+<!-- ============ LAB 1 (no. 2 in the 3-hour version) ============ -->
+<section class="card lab first" id="lab1" data-lab="Lab 1: Real RAG, in your browser">
+  <div class="labhead"><span class="badge">LAB 1</span><h3>Real RAG, in your browser</h3></div>
+  <p class="meta">On your own · uses the Lab 1 page</p>
+  <p class="why"><b>Why:</b> RAG is how an AI system answers from your own documents. Here you run every step of it yourself on a 4-page customer care handbook, and see where it can go wrong.</p>
+  <p class="noprint"><a class="btn run" href="rag.html" target="_blank" rel="noopener">Open the Lab 1 page</a></p>
+  <p class="hint">The Lab 1 page opens in a new tab. It is <b class="runword">teal (blue-green)</b>, so you can tell it from this navy page. It has five lettered boxes, A to E. The steps below tell you which box to use. Come back to this tab to type your answers.</p>
+  <ol class="steps">
+    <li><p>On the Lab 1 page, wait until the bar at the top says <b>Ready</b>.</p></li>
+    <li>
+      <p>Press the button in <b>boxes A, B and C</b>, in order: <b>Read it for me</b> (the page reads the PDF, so you do not need to), <b>Split into passages</b>, and <b>Turn into numbers and store</b>. There is nothing to type for these three. Just look at what each box shows.</p>
+    </li>
+    <li>
+      <p>In <b>box D</b>, press a question button, then <b>Find the closest passages</b>. Do this for all three questions. For each, type which section came top and how strong the page says the match is.</p>
+      <div class="item"><div class="t">Blender, 45 days</div>
+        <div class="row"><div><label class="f" for="l2q1">Top passage (section)</label><input type="text" id="l2q1" data-k="l2.q1.sec" data-label="Blender, top passage"></div>
+        <div><label class="f" for="l2q1m">Match</label><select id="l2q1m" data-k="l2.q1.match" data-label="Blender, match"><option value="">Choose…</option><option>Strong</option><option>Fair</option><option>Weak</option></select></div></div></div>
+      <div class="item"><div class="t">Parcel turned up smashed</div>
+        <div class="row"><div><label class="f" for="l2q2">Top passage (section)</label><input type="text" id="l2q2" data-k="l2.q2.sec" data-label="Smashed parcel, top passage"></div>
+        <div><label class="f" for="l2q2m">Match</label><select id="l2q2m" data-k="l2.q2.match" data-label="Smashed parcel, match"><option value="">Choose…</option><option>Strong</option><option>Fair</option><option>Weak</option></select></div></div></div>
+      <div class="item"><div class="t">Gift cards</div>
+        <div class="row"><div><label class="f" for="l2q3">Top passage (section)</label><input type="text" id="l2q3" data-k="l2.q3.sec" data-label="Gift cards, top passage"></div>
+        <div><label class="f" for="l2q3m">Match</label><select id="l2q3m" data-k="l2.q3.match" data-label="Gift cards, match"><option value="">Choose…</option><option>Strong</option><option>Fair</option><option>Weak</option></select></div></div></div>
+    </li>
+    <li>
+      <p>Press the <b>Blender, 45 days</b> question again. Then look at <b>box E</b>: it shows the message a chatbot would be sent, which is the passages that were found plus the question. Open <b>the expected answer</b> under it.</p>
+      <label class="f" for="l2a">What does the blender customer get?</label>
+      <input type="text" id="l2a" data-k="l2.answer" data-label="What the blender customer gets">
+    </li>
+  </ol>
+  <p class="hint"><b>That is the end of Lab 1.</b></p>
+  <details class="take"><summary>Takeaway (open after the debrief)</summary><div>RAG is a search, then a hand-over. The search matches on meaning, not on matching words: the handbook never says “parcel” or “smashed”. But it always returns something, even when the handbook has no answer (gift cards). The model only sees what the search found.</div></details>
+  <p class="later"><b>Optional, after the session:</b> with a laptop and a free GitHub account you can run the same lab with a full vector database and a small model that writes the answer. Steps: <a href="https://github.com/skillrepos/tlsdemyst#readme" target="_blank" rel="noopener">github.com/skillrepos/tlsdemyst</a></p>
+</section>
+
+<!-- ============ LAB 2 (no. 4 in the 3-hour version) ============ -->
+<section class="card lab" id="lab2" data-lab="Lab 2: Manage the agent">
+  <div class="labhead"><span class="badge">LAB 2</span><h3>Manage the agent</h3></div>
+  <p class="meta">On your own · uses the Lab 2 page</p>
+  <p class="why"><b>Why:</b> An AI agent can take actions, not only write text. Two decisions set what it does. What you connect it to decides what it <i>can</i> reach. (MCP is a standard way to make that connection.) Your policy decides what it <i>may</i> do on its own. Here you see the first, then make the second as the agent’s manager.</p>
+  <div class="quote"><b>The ticket:</b> <i>“I was charged twice for order 1182. Please refund one charge.”</i></div>
+  <p class="noprint"><a class="btn run" href="mcp.html" target="_blank" rel="noopener">Open the Lab 2 page</a></p>
+  <p class="hint">The Lab 2 page opens in a new tab. It is <b class="runword">teal (blue-green)</b>, so you can tell it from this navy page. It has five lettered boxes (A to E). The steps below tell you which box to use. Come back to this tab to type your answers.</p>
+  <ol class="steps">
+    <li>
+      <p>Read <b>box A</b>: with no connection, the assistant cannot see the order. Then, in <b>box B</b>, press <b>Connect</b>. The server sends back a list of what it offers.</p>
+      <div class="row">
+        <div><label class="f" for="l4a">How many actions does the server offer?</label><input class="short" type="number" inputmode="numeric" id="l4a" data-k="l4.offers" data-label="Actions the server offers"></div>
+        <div><label class="f" for="l4b">Of those, how many are marked “reads only”?</label><input class="short" type="number" inputmode="numeric" id="l4b" data-k="l4.readonly" data-label="Of those, look-up only"></div>
+      </div>
+    </li>
+    <li><p>In <b>box C</b>, press all three buttons. This is what the assistant would do on its own: look things up. Then look at <b>box E</b>: it shows the message a chatbot would be sent, which is what came back from the server plus the question. Open <b>the expected answer</b> under it.</p></li>
+    <li>
+      <p>In <b>box D</b>, press the red button to tell the server to issue a refund.</p>
+      <label class="f" for="l4d">What happened?</label><input type="text" id="l4d" data-k="l4.refund" data-label="What happened to the refund">
+    </li>
+    <li>
+      <p><b>Now you are the agent’s manager.</b> For each of the seven things an agent could do to resolve the ticket, put a check mark in <b>On the list</b> if the Kettlewick server you just connected to offers it. Then choose what you would allow it to do <b>if it could</b>. Some are not on the list: decide anyway, as your policy for the day someone connects them.</p>
+      <p class="hint"><b>Alone</b> = the agent does it by itself · <b>Person</b> = a person approves first · <b>Never</b> = the agent must not do it</p>
+      <div id="l4rows"></div>
+    </li>
+    <li>
+      <label class="f" for="l4u" style="margin-top:0">Which one were you least sure about?</label>
+      <input type="text" id="l4u" data-k="l4.unsure" data-label="Least sure about">
+      <p class="hint">The <b>On the list</b> column has right answers: they come from the list the server sent back in box B, and the instructor will go over them. The <b>Alone / Person / Never</b> choice is your own policy, so there is no single right answer there. The instructor will run a quick poll to see how the room split.</p>
+    </li>
+  </ol>
+  <details class="take"><summary>Takeaway (open after the debrief)</summary><div>Two separate decisions keep an agent safe. The first is what gets connected: this server offers no refund at all, so no clever wording can make the agent issue one. The second is your policy for what it may do alone among the things it <i>can</i> reach. When the room disagrees on the second, it is not about how smart the AI is. In many companies that policy is not written down anywhere. Writing it is the company’s job, not the vendor’s. When your team connects an assistant to a system, ask to see the list, and ask who decided what is on it.</div></details>
+  <p class="later"><b>Optional, after the session:</b> the fuller version connects a small model to a separate server and lets the model choose what to use. Steps: <a href="https://github.com/skillrepos/tlsdemyst#readme" target="_blank" rel="noopener">github.com/skillrepos/tlsdemyst</a></p>
+</section>
+
+<h2 class="session">Session 2: leading it</h2>
+
+<!-- ============ LAB 3 (no. 5 in the 3-hour version) ============ -->
+<section class="card lab" id="lab3" data-lab="Lab 3: See the top AI security risk">
+  <div class="labhead"><span class="badge">LAB 3</span><h3>See the top AI security risk</h3></div>
+  <p class="meta">On your own · uses the Lab 3 page, and any chatbot (ChatGPT, Copilot, Gemini, Claude)</p>
+  <p class="why"><b>Why:</b> “Prompt injection” means slipping instructions, or false facts, into something the AI reads. It is the top risk on OWASP’s list for AI applications. In Lab 1 you saw that the chatbot only sees what the search finds. Kettlewick’s assistant also searches its community forum, where anyone with an account can post. Here someone uses that to get their own text into the search.</p>
+  <p class="noprint"><a class="btn run" href="injection.html" target="_blank" rel="noopener">Open the Lab 3 page</a></p>
+  <p class="hint">The Lab 3 page opens in a new tab. It is <b class="runword">teal (blue-green)</b>, so you can tell it from this navy page. It has two lettered boxes, A and B. Come back to this tab to mark your answers.</p>
+  <ol class="steps">
+    <li><p>On the Lab 3 page, wait until the bar at the top says <b>Ready</b>. You do not need to redo Lab 1: the page builds the same handbook search for you.</p></li>
+    <li>
+      <p>In <b>box A</b>, read <b>Try 1</b>, the attacker’s first post. Press <b>Try 1: add the post and ask again</b>.</p>
+      <label class="f" for="l5top">Which passage came top?</label><input type="text" id="l5top" data-k="l5.top" data-label="Passage that came top">
+    </li>
+    <li>
+      <p>Press <b>Copy this message</b>. Open a <b>new chat</b> in your chatbot, paste it and send. What did your chatbot do? Pick the closest.</p>
+      <div class="checks" data-label="What my chatbot did, try 1">
+        <label><input type="radio" name="l5.try1" value="Fooled"><span><b>Fooled:</b> it promised a full cash refund.</span></label>
+        <label><input type="radio" name="l5.try1" value="Held"><span><b>Held:</b> it said store credit (Section 1) and did not mention the post.</span></label>
+        <label><input type="radio" name="l5.try1" value="Warned me"><span><b>Warned me</b> about the forum post.</span></label>
+      </div>
+    </li>
+    <li><p>In <b>box B</b>, read <b>Try 2</b>. The attacker has taken out the note to the AI and made the post sound official. Press <b>Try 2: swap in the edited post and ask again</b>.</p></li>
+    <li>
+      <p>Copy the new message into another <b>new chat</b> and send. What did your chatbot do this time? Pick the closest.</p>
+      <div class="checks" data-label="What my chatbot did, try 2">
+        <label><input type="radio" name="l5.try2" value="Fooled"><span><b>Fooled:</b> it promised a full cash refund.</span></label>
+        <label><input type="radio" name="l5.try2" value="Held"><span><b>Held:</b> it said store credit (Section 1) and did not mention the post.</span></label>
+        <label><input type="radio" name="l5.try2" value="Warned me"><span><b>Warned me</b> about the forum post.</span></label>
+      </div>
+    </li>
+    <li><label class="f" for="l5w">Which chatbot did you use?</label><input type="text" id="l5w" data-k="l5.which" data-label="Chatbot I used"></li>
+  </ol>
+  <details class="take"><summary>Takeaway (open after the debrief)</summary><div>The attacker never touched the chatbot. They wrote a forum post that sounds like the question, so the search handed it over. A clumsy note to the AI often gets caught. A post that just sounds official often does not: in our test, the same chatbot ignored the first post and promised a full cash refund for the second. That is why “it caught it when I tried” is not a defense. Attackers do not write clumsy ones, and they get unlimited tries. Ask of any AI system: what does it search, and who can write there? Here the chatbot only wrote an answer. A support agent could have issued the refund.</div></details>
+</section>
+
+<!-- ============ LAB 4 (no. 6 in the 3-hour version; field names still start l9) ============ -->
+<section class="card lab" id="lab4" data-lab="Lab 4: Score the proposal">
+  <div class="labhead"><span class="badge">LAB 4</span><h3>Score the proposal</h3></div>
+  <p class="meta">On your own · the main exercise</p>
+  <p class="why"><b>Why:</b> You use four questions to decide whether to fund an AI proposal. The same four are on your <a href="handout.pdf" target="_blank" rel="noopener">takeaway handout</a>.</p>
+  <div class="quote"><b>The proposal, from Dana Ruiz, head of customer support at Kettlewick:</b> an AI agent answers routine support tickets on its own. It reads the ticket and the customer’s emails, looks up the order, sends the reply, and can issue refunds up to $500 without asking anyone.
+    <ul>
+      <li><b>Why:</b> we get 50,000 tickets a month, and a person takes 9 minutes on each. The agent should cut routine tickets to under 2 minutes. I will own that number.</li>
+      <li><b>Data:</b> three years of tickets are in our help desk. Two versions of the refund policy are in use, and nobody has said which one is current.</li>
+      <li><b>Build:</b> our own developers, about 4 months. We have not looked at tools we could buy.</li>
+      <li><b>Running cost:</b> about 12¢ a ticket in AI fees, about $6,000 a month. No limit on steps.</li>
+      <li><b>Measuring it:</b> the help desk already records handling time. We have no measure of reply quality. We will review after 6 months, across all ticket types.</li>
+    </ul></div>
+  <p class="hint">Some parts are strong and some are weak. Score what is written, not what you hope is true.</p>
+  <ol class="steps">
+    <li>
+      <p><b>Score each of the four questions.</b> Then, for your <b>lowest score</b>, write what you would ask Dana before you decide. (If two are tied, pick one.)</p>
+      <p class="hint"><b>1</b> = unclear or unacceptable · <b>2</b> = partly answered, needs work · <b>3</b> = clear, backed up, acceptable</p>
+      <div id="l9rows"></div>
+      <label class="f" for="l9ask">What I would ask Dana about my lowest score</label><textarea id="l9ask" rows="2" data-k="l9.ask" data-label="What I would ask Dana about my lowest score"></textarea>
+      <div class="note warn" id="l9gate" hidden>You gave a 1 to a question that must pass. That means “not yet”, however good the Value story is.</div>
+    </li>
+    <li><p><b>Do not add the scores up.</b> Risk and Measurability must pass: a 1 on either one means “not yet”.</p></li>
+    <li>
+      <p><b>Vote.</b></p>
+      <div class="checks" data-label="My vote">
+        <label><input type="radio" name="l9.vote" value="A, full rollout"><span><b>A</b> · full rollout</span></label>
+        <label><input type="radio" name="l9.vote" value="B, limited pilot"><span><b>B</b> · limited pilot</span></label>
+        <label><input type="radio" name="l9.vote" value="C, no"><span><b>C</b> · no</span></label>
+        <label><input type="radio" name="l9.vote" value="D, not yet"><span><b>D</b> · not yet: send it back for more evaluation</span></label>
+      </div>
+    </li>
+    <li>
+      <label class="f" for="l9c" style="margin-top:0">One condition you would attach to your vote</label>
+      <textarea id="l9c" rows="2" data-k="l9.condition" data-label="One condition I would attach"></textarea>
+    </li>
+  </ol>
+  <details class="take"><summary>Takeaway (open after the debrief)</summary><div>As written, the answer is D, not yet. Value is strong (a number and an owner), but Risk scores 1: the agent reads outsiders’ messages, sees customer data, and refunds up to $500 with nobody approving and no step limit. Risk must pass. Attach conditions and it becomes B, a limited pilot: a person approves every refund, one ticket category for 90 days, a check on reply quality, and a step limit. Change the facts and the answer changes. That is the point of asking.</div></details>
+</section>
+
+<h2 class="session" id="more">More to try on your own</h2>
+<p class="moreintro">These three are not part of the two sessions. Each one is a short lab you can do by yourself, on this page, whenever you like. Your answers are saved on this device in the same way.</p>
+
+<!-- ============ ON YOUR OWN: Estimate the tokens (no. 1 in the 3-hour version) ============ -->
+<section class="card lab" id="tokens" data-lab="On your own: Estimate the tokens">
+  <div class="labhead"><span class="badge more">ON YOUR OWN</span><h3>Estimate the tokens</h3></div>
+  <p class="meta">On your own · uses the counter on this page</p>
+  <p class="why"><b>Why:</b> AI is billed by the “token”: a piece of a word. Here you find out how many tokens three short lines are cut into, and why a short line can cost more than a long one.</p>
+  <ol class="steps">
+    <li>
+      <p><b>Estimate first.</b> For each line below, type how many tokens you think it will be cut into. Line C is the shortest of the three.</p>
+    </li>
+    <li>
+      <p><b>Then press “Count the tokens”</b> for that line. The button works once you have typed an estimate.</p>
+      <div class="item" data-line="A">
+        <div class="t">A · a customer’s message in English</div>
+        <div class="sample">My blender arrived broken. Please send a replacement.</div>
+        <div class="row">
+          <div><label class="f" for="l1ga">Your estimate</label><input class="short guess" type="number" inputmode="numeric" min="0" id="l1ga" data-k="l1.a.guess" data-label="A, my estimate"></div>
+          <div><label class="f" for="l1ca">Tokens</label><input class="short count" type="number" inputmode="numeric" min="0" id="l1ca" data-k="l1.a.count" data-label="A, tokens"></div>
+          <div><button class="countbtn" disabled>Count the tokens</button></div>
+        </div>
+        <div class="tok" aria-live="polite"></div>
+      </div>
+      <div class="item" data-line="B">
+        <div class="t">B · the same message in Spanish</div>
+        <div class="sample">Mi licuadora llegó rota. Por favor, envíen un reemplazo.</div>
+        <div class="row">
+          <div><label class="f" for="l1gb">Your estimate</label><input class="short guess" type="number" inputmode="numeric" min="0" id="l1gb" data-k="l1.b.guess" data-label="B, my estimate"></div>
+          <div><label class="f" for="l1cb">Tokens</label><input class="short count" type="number" inputmode="numeric" min="0" id="l1cb" data-k="l1.b.count" data-label="B, tokens"></div>
+          <div><button class="countbtn" disabled>Count the tokens</button></div>
+        </div>
+        <div class="tok" aria-live="polite"></div>
+      </div>
+      <div class="item" data-line="C">
+        <div class="t">C · an order record</div>
+        <div class="sample">ORD-2207 / KW-BLND-89 / 2026-11-20 / $89.00</div>
+        <div class="row">
+          <div><label class="f" for="l1gc">Your estimate</label><input class="short guess" type="number" inputmode="numeric" min="0" id="l1gc" data-k="l1.c.guess" data-label="C, my estimate"></div>
+          <div><label class="f" for="l1cc">Tokens</label><input class="short count" type="number" inputmode="numeric" min="0" id="l1cc" data-k="l1.c.count" data-label="C, tokens"></div>
+          <div><button class="countbtn" disabled>Count the tokens</button></div>
+        </div>
+        <div class="tok" aria-live="polite"></div>
+      </div>
+      <div id="tokErr"></div>
+      <p class="hint">The counter runs on this device and cuts text the same way OpenAI’s recent models do. Other vendors cut text a little differently. If the counter will not load, open <a href="https://platform.openai.com/tokenizer" target="_blank" rel="noopener">platform.openai.com/tokenizer</a>, type each line in, and type the count into the box yourself.</p>
+    </li>
+    <li>
+      <p><b>Answer two questions.</b></p>
+      <label class="f">Which line had the most tokens?</label>
+      <div class="seg" data-label="Line with the most tokens">
+        <label><input type="radio" name="l1.most" value="A"><span>A</span></label>
+        <label><input type="radio" name="l1.most" value="B"><span>B</span></label>
+        <label><input type="radio" name="l1.most" value="C"><span>C</span></label>
+      </div>
+      <label class="f">Was it the longest line?</label>
+      <div class="seg" data-label="Was it the longest line">
+        <label><input type="radio" name="l1.longest" value="Yes"><span>Yes</span></label>
+        <label><input type="radio" name="l1.longest" value="No"><span>No</span></label>
+      </div>
+    </li>
+  </ol>
+  <details class="noprint" style="margin-top:14px"><summary style="cursor:pointer;color:var(--blue)">Want to try your own words?</summary>
+    <p class="hint">Type anything. It is counted on this device and is not sent anywhere.</p>
+    <input type="text" id="ownText" placeholder="Type a sentence, a name, a part number…">
+    <div class="tok" id="ownTok"></div><div class="hint" id="ownCount"></div>
+  </details>
+  <details class="take"><summary>Takeaway (open when you have finished)</summary><div>You pay by the token, not by the word. The same meaning in another language takes more tokens. Codes, dates and prices take more again. When a vendor quotes a price “per million tokens”, ask how many tokens your kind of work turns into.</div></details>
+</section>
+
+<!-- ============ ON YOUR OWN: Teach it your rules (no. 3 in the 3-hour version) ============ -->
+<section class="card lab" id="rules" data-lab="On your own: Teach it your rules">
+  <div class="labhead"><span class="badge more">ON YOUR OWN</span><h3>Teach it your rules</h3></div>
+  <p class="meta">On your own · uses any chatbot (ChatGPT, Copilot, Gemini, Claude)</p>
+  <p class="why"><b>Why:</b> In Lab 1 the AI looked up Kettlewick’s facts. But every company also has its own rules for what matters most, and the AI cannot guess them. Here you see what happens when you just ask, and then what happens when you show it a few examples.</p>
+  <ol class="steps">
+    <li>
+      <p><b>Guess first.</b> Read this ticket:</p>
+      <div class="quote"><i>“The same blender is $15 cheaper at another shop. Not complaining, I love Kettlewick, just thought you&#x27;d want to know!”</i></div>
+      <p class="hint">The same four levels the AI is given: <b>P1</b> = Critical · <b>P2</b> = High · <b>P3</b> = Medium · <b>P4</b> = Low</p>
+      <div class="item"><div class="t">The priority I would give it</div><div class="seg" data-label="My priority"><label><input type="radio" name="l3r.mine" value="P1"><span>P1</span></label><label><input type="radio" name="l3r.mine" value="P2"><span>P2</span></label><label><input type="radio" name="l3r.mine" value="P3"><span>P3</span></label><label><input type="radio" name="l3r.mine" value="P4"><span>P4</span></label></div></div>
+      <div class="item"><div class="t">The priority I think the AI will give it</div><div class="seg" data-label="The priority I think the AI will give it"><label><input type="radio" name="l3r.guess" value="P1"><span>P1</span></label><label><input type="radio" name="l3r.guess" value="P2"><span>P2</span></label><label><input type="radio" name="l3r.guess" value="P3"><span>P3</span></label><label><input type="radio" name="l3r.guess" value="P4"><span>P4</span></label></div></div>
+    </li>
+    <li>
+      <p><b>Just ask.</b> Open a <b>new chat</b> in your chatbot. Copy everything in the box below and send it.</p>
+      <div class="sample" id="l3plain">You are a support ticket classifier for Kettlewick, an online shop that sells kitchen appliances. Give each ticket exactly one priority: P1-Critical, P2-High, P3-Medium, or P4-Low.
+
+Present the results as a table: Ticket #, Priority, Reason (one sentence).
+
+Ticket 1: &quot;The same blender is $15 cheaper at another shop. Not complaining, I love Kettlewick, just thought you&#x27;d want to know!&quot;
+Ticket 2: &quot;URGENT!!! My $45 kettle arrived with a huge dent. This is completely unacceptable. I need this sorted TODAY!!!&quot;
+Ticket 3: &quot;Hi, could you change the email address on my account to dana.new@example.com? Thanks!&quot;
+Ticket 4: &quot;My order shipped 12 business days ago and still hasn&#x27;t arrived. It&#x27;s a birthday present for Saturday.&quot;
+Ticket 5: &quot;I was charged $89 twice for my blender order. Can someone look into it?&quot;</div>
+      <button class="noprint" data-copy="l3plain" data-msg="l3plainmsg">Copy</button> <span class="saved" id="l3plainmsg" style="display:inline"></span>
+      <label class="f noprint" for="l3paste_plain">Paste the AI’s whole reply here</label><textarea class="noprint" rows="3" id="l3paste_plain" data-l3paste="plain" placeholder="Copy the AI’s reply in your chatbot, then paste it here"></textarea><div class="res noprint" id="l3read_plain"></div><p class="hint">The page picks out the AI’s five priorities and puts them in the <b>Just ask</b> column in step 5, so you don’t have to type them. To copy the reply: use the chatbot’s copy button under its answer, or press and hold the reply on a phone.</p>
+    </li>
+    <li>
+      <p><b>Now see Kettlewick’s rules.</b> These are the rules the company actually uses:</p>
+      <ul>
+        <li>Any mention of <b>another shop</b> is <b>P1</b>, even when the customer is happy. (Keeping customers is the top goal this year.)</li>
+        <li>A <b>damaged item under $100</b> is <b>P4</b>. (A free replacement goes out automatically, the same day.)</li>
+        <li>Any request to <b>change an account’s email address</b> is <b>P1</b>. (It is the most common way accounts get taken over.)</li>
+        <li>A parcel <b>10 or more business days late</b> is treated as lost: <b>P2</b>.</li>
+        <li>A <b>duplicate charge under $100</b> is <b>P4</b>. (It is refunded automatically overnight.)</li>
+      </ul>
+      <p>Scroll down to step 5: it already shows which of the five the AI followed. Did the AI match your guess in step 1?</p>
+    </li>
+    <li>
+      <p><b>Show it examples.</b> Open <b>another new chat</b>. Copy the box below and send it. It gives the AI six example tickets with Kettlewick’s answers, then the same five tickets.</p>
+      <div class="sample" id="l3examples">You are a support ticket classifier for Kettlewick, an online shop that sells kitchen appliances. Give each ticket exactly one priority: P1-Critical, P2-High, P3-Medium, or P4-Low.
+
+Here is how Kettlewick prioritizes tickets, shown by example:
+
+Ticket: &quot;Saw a toaster sale at the shop down the road. Mine&#x27;s still great though!&quot;
+Priority: P1-Critical
+(Any mention of another shop is P1, even when the customer is happy. Keeping customers is our top goal this year.)
+
+Ticket: &quot;HELP!!! My $59 coffee grinder came with a cracked lid. I&#x27;m furious. Fix this NOW.&quot;
+Priority: P4-Low
+(Damaged items under $100 are P4. Our damage form sends a free replacement automatically, the same day.)
+
+Ticket: &quot;My new $249 stand mixer arrived with a cracked bowl.&quot;
+Priority: P2-High
+(Damaged items of $100 or more are P2. A person arranges the return and replacement.)
+
+Ticket: &quot;Can you update the email on my account? I&#x27;ve switched providers.&quot;
+Priority: P1-Critical
+(Any request to change an account&#x27;s email address is P1. It is the most common way accounts get taken over, so a person checks it right away.)
+
+Ticket: &quot;Tracking on my order hasn&#x27;t moved in 11 business days.&quot;
+Priority: P2-High
+(A parcel 10 or more business days late is treated as lost: P2.)
+
+Ticket: &quot;Looks like I paid twice for my toaster, $39 each time.&quot;
+Priority: P4-Low
+(A duplicate charge under $100 is P4. Our payment system finds and refunds it automatically overnight.)
+
+Now classify these tickets. Present the results as a table: Ticket #, Priority, Reason (one sentence).
+
+Ticket 1: &quot;The same blender is $15 cheaper at another shop. Not complaining, I love Kettlewick, just thought you&#x27;d want to know!&quot;
+Ticket 2: &quot;URGENT!!! My $45 kettle arrived with a huge dent. This is completely unacceptable. I need this sorted TODAY!!!&quot;
+Ticket 3: &quot;Hi, could you change the email address on my account to dana.new@example.com? Thanks!&quot;
+Ticket 4: &quot;My order shipped 12 business days ago and still hasn&#x27;t arrived. It&#x27;s a birthday present for Saturday.&quot;
+Ticket 5: &quot;I was charged $89 twice for my blender order. Can someone look into it?&quot;</div>
+      <button class="noprint" data-copy="l3examples" data-msg="l3exmsg">Copy</button> <span class="saved" id="l3exmsg" style="display:inline"></span>
+      <label class="f noprint" for="l3paste_ex">Paste the AI’s whole reply here</label><textarea class="noprint" rows="3" id="l3paste_ex" data-l3paste="ex" placeholder="Copy the AI’s reply in your chatbot, then paste it here"></textarea><div class="res noprint" id="l3read_ex"></div><p class="hint">The page picks out the AI’s five priorities and puts them in the <b>With examples</b> column in step 5, so you don’t have to type them. To copy the reply: use the chatbot’s copy button under its answer, or press and hold the reply on a phone.</p>
+    </li>
+    <li>
+      <p><b>See how the AI did.</b> This fills in by itself from the replies you pasted. Next to each ticket is Kettlewick’s rule: <span class="ok">✓</span> means the AI followed it, <span class="no">✗</span> means it did not. Nothing here scores you. If the page could not read a reply, tap the P1–P4 buttons under each ticket to enter what the AI said.</p>
+      <div id="l3rows"></div>
+            <div class="res" id="l3res"></div>
+      <p class="hint">Compare the two totals: on how many of the 5 tickets did the AI follow the rule with <b>Just ask</b>, and on how many <b>with examples</b>?</p>
+    </li>
+  </ol>
+  <p class="later"><b>Want to go further?</b> Write a ticket of your own that you think would fool the AI without the examples (hint: make it sound calm but break one of Kettlewick’s rules, or sound furious about something minor). Paste it into both chats and compare.</p>
+  <label class="f" for="l3own">My tricky ticket (optional)</label><textarea rows="2" id="l3own" data-k="l3r.own" data-label="My tricky ticket"></textarea>
+  <details class="take"><summary>Takeaway (open when you have finished)</summary><div>The AI did not get smarter between step 2 and step 4. It was told what your company cares about. Without that, it judges by general good sense and by tone, and loud tickets look urgent. A few examples of your own rules usually fix it. When a team says “the AI keeps getting this wrong”, the first question is: did anyone show it what right looks like?</div></details>
+</section>
+
+<!-- ============ ON YOUR OWN: Start your own pilot page (no. 7 in the 3-hour version; field names still start l10) ============ -->
+<section class="card lab" id="pilot" data-lab="On your own: Start your own pilot page">
+  <div class="labhead"><span class="badge more">ON YOUR OWN</span><h3>Start your own pilot page</h3></div>
+  <p class="meta">On your own · this one goes home with you</p>
+  <p class="why"><b>Why:</b> You start a pilot page: a one-page plan for trying one real AI idea from your organization in one small area first. Then you see whether any part of it is still unanswered.</p>
+  <ol class="steps">
+    <li>
+      <p><b>Pick one real AI idea</b> from your organization: something proposed, or something already running. There is no chatbot in this lab, and your answers stay on your device. Describe the idea in general terms.</p>
+      <label class="f" for="l10i">The idea</label><input type="text" id="l10i" data-k="l10.idea" data-label="The idea">
+    </li>
+    <li>
+      <p><b>Fill in four lines.</b> Leave a line empty if you cannot answer it.</p>
+      <label class="f" for="l10a">Business problem <span class="hint" style="font-weight:400">· what is going wrong today, in one sentence?</span></label><textarea id="l10a" rows="2" data-k="l10.problem" data-label="Business problem"></textarea>
+      <label class="f" for="l10b">Scope <span class="hint" style="font-weight:400">· which one workflow?</span></label><input type="text" id="l10b" data-k="l10.scope" data-label="Scope">
+      <label class="f" for="l10c">Owner <span class="hint" style="font-weight:400">· one person (a name or a job title)</span></label><input type="text" id="l10c" data-k="l10.owner" data-label="Owner">
+      <label class="f" for="l10d">Success measure <span class="hint" style="font-weight:400">· which number, from what to what?</span></label><input type="text" id="l10d" data-k="l10.measure" data-label="Success measure">
+    </li>
+    <li>
+      <label class="f" style="margin-top:0">Which line could you not fill in?</label>
+      <div class="seg" data-label="The line I could not fill in">
+        <label><input type="radio" name="l10.stuck" value="Business problem"><span>Business problem</span></label>
+        <label><input type="radio" name="l10.stuck" value="Scope"><span>Scope</span></label>
+        <label><input type="radio" name="l10.stuck" value="Owner"><span>Owner</span></label>
+        <label><input type="radio" name="l10.stuck" value="Success measure"><span>Success measure</span></label>
+        <label><input type="radio" name="l10.stuck" value="None"><span>None</span></label>
+      </div>
+    </li>
+  </ol>
+  <p class="later"><b>Already have a pilot page?</b> Do not start a new one. Answer the Risk question from Lab 4 for your existing pilot, and write one line for what a single item will cost to run.</p>
+  <details class="take"><summary>Takeaway (open when you have finished)</summary><div>Any line you could not fill in is your first question when you get back.</div></details>
+  <p class="later noprint"><b>Take the rest home.</b> The <a href="handout.pdf" target="_blank" rel="noopener">takeaway handout</a> has all seven pilot lines, the four questions from Lab 4, the eight questions to ask in your next AI meeting, and a plain-language glossary.</p>
+</section>
+
+<div class="card noprint">
+  <b>Finished? Keep your answers.</b>
+  <div class="tools" style="margin-top:8px">
+    <button class="ghost" data-act="print">Save as PDF or print</button>
+    <button class="ghost" data-act="copy">Copy my answers</button>
+    <a class="btn ghost" href="handout.pdf" target="_blank" rel="noopener">Open the takeaway handout</a>
+    <button class="quiet" data-act="clear">Clear my answers</button>
+  </div>
+  <div class="saved" id="status"></div>
+  <textarea id="copyBox" readonly aria-label="Your answers as text"></textarea>
+  <p class="hint" style="margin-bottom:0">“Save as PDF or print” opens your device’s print screen; choose “Save as PDF” there. “Copy my answers” puts them on the clipboard as plain text, ready to paste into an email or note to yourself.</p>
+</div>
+
+<footer>Your answers are saved only in this browser on this device. Nothing you type is sent anywhere.<br>For educational use only by the attendees of our workshops.<br>© 2026 Brent C. Laster &amp; Tech Skills Transformations LLC</footer>
+</main>
+<script type="module" src="labs.js"></script>
+</body>
+</html>

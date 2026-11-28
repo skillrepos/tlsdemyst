@@ -1,0 +1,14 @@
+{
+  "editor.fontSize": 22,
+  "chat.editor.fontSize": 22,
+  "chat.fontSize": 20,
+  "terminal.integrated.fontSize": 20,
+  "editor.wordWrap": "on",
+  "editor.minimap.enabled": false,
+  "workbench.startupEditor": "none",
+  "github.copilot.enable": { "*": true, "plaintext": true, "markdown": true },
+  "github.copilot.enableAutoComplete": true,
+  "editor.inlineSuggest.enabled": true,
+  "chat.useAgentSkills": true,
+  "files.exclude": { ".vscode": true }
+}

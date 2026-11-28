@@ -1,0 +1,5 @@
+py_env/
+codespace/vector_db/
+__pycache__/
+.DS_Store
+node_modules/
